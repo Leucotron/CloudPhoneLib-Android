@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CloudPhoneLib</string>
+    <string name="backpressed_message">Toque no botão voltar novamente para fechar essa tela.</string>
+    <string name="service_unavailable">O serviço está indisponível. Tenten novamente mais tarde.</string>
+</resources>
