@@ -46,6 +46,7 @@ A biblioteca solicita as seguintes permissões:
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
 ```
 Para o funcionamento do áudio, você pode solicitar antecipadamente o acesso ao Microfone, caso não o faça, a biblioteca irá solicitar internamente. Se o seu aplicativo já solicita permissões de forma mais amigável, você pode incluir RECORD_AUDIO nas suas solicitações:
 ```
@@ -55,4 +56,6 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
 }
 ```
 
+2) Sensor de proximidade:
+A biblioteca trata o sensor de proximidade para que durante a chamada a tela não seja acionada indevidamente.
 
