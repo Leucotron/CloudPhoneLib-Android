@@ -26,7 +26,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.Leucotron:CloudPhoneLib-Android:0.1.1'
+	        implementation 'com.github.Leucotron:CloudPhoneLib-Android:0.1.2'
 	}
 ```
 3) Na ação onde irá abrir a comunicação com o Cloud Phone, adicionar a instrução abaixo:
