@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               new JCloudPhoneController(getApplicationContext(),"https://cloud-phone.leucotron.com.br/cloudphone/leucotron/ligar").openCloudPhoneActivity();
+                JCloudPhoneController controller = new JCloudPhoneController(getApplicationContext());
+                controller.openCloudPhoneActivity("https://cloud-phone.leucotron.com.br/cloudphone/leucotron/ligar");
             }
         });
     }

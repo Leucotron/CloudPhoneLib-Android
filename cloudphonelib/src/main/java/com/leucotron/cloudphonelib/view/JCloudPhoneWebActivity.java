@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
@@ -34,7 +36,7 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
         url = intent.getStringExtra("url");
         initUi();
         initPermissions();
-        startConnection();
+
     }
 
     @Override
@@ -44,14 +46,29 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
             finish();
             return;
         } else {
-            Toast.makeText(getBaseContext(), getString(R.string.backpressed_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.backpressed_message), Toast.LENGTH_SHORT).show();
         }
 
         backPressedTime = System.currentTimeMillis();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(), "Conceder a permissão para uso do Microfone é obrigatória para o funcionamento da chamada.", Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            startConnection();
+        }
+    }
+
     private void initUi() {
-        getSupportActionBar().hide();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
         webView = findViewById(R.id.webView);
     }
 
@@ -60,6 +77,8 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, requestPermissionCode);
+        } else {
+            startConnection();
         }
     }
 
