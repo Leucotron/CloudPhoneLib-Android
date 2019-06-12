@@ -3,9 +3,14 @@ package com.leucotron.cloudphonelib.view;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -20,13 +25,22 @@ import android.widget.Toast;
 
 import com.leucotron.cloudphonelib.R;
 
-public class JCloudPhoneWebActivity extends AppCompatActivity {
+public class JCloudPhoneWebActivity extends AppCompatActivity implements SensorEventListener {
 
     private String url = null;
 
     private WebView webView = null;
     private static final int TIME_INTERVAL = 3000;
     private long backPressedTime;
+
+    private SensorManager sensorManager;
+    private Sensor proximity;
+    private static final int SENSOR_SENSITIVITY = 4;
+
+    private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
+    private int field = 0x00000020;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,8 +49,22 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         initUi();
+        initWakeLock();
+        initSensor();
         initPermissions();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
     }
 
     @Override
@@ -48,7 +76,6 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.backpressed_message), Toast.LENGTH_SHORT).show();
         }
-
         backPressedTime = System.currentTimeMillis();
     }
 
@@ -82,6 +109,22 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
         }
     }
 
+    private void initSensor() {
+        sensorManager = (SensorManager) getSystemService(getApplicationContext().SENSOR_SERVICE);
+        proximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+    }
+
+    private void initWakeLock() {
+        try {
+            // Yeah, this is hidden field.
+            field = PowerManager.class.getClass().getField("PROXIMITY_SCREEN_OFF_WAKE_LOCK").getInt(null);
+        } catch (Throwable ignored) {
+        }
+
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(field, getLocalClassName());
+    }
+
     private void startConnection() {
 
         webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
@@ -101,6 +144,25 @@ public class JCloudPhoneWebActivity extends AppCompatActivity {
         webView.setWebChromeClient(new MyWebChromeViewClient());
         webView.setWebViewClient(new MyWebViewClient());
         webView.loadUrl(url);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float distance = event.values[0];
+        if (distance >= -SENSOR_SENSITIVITY && distance <= SENSOR_SENSITIVITY) {
+            if(!wakeLock.isHeld()) {
+                wakeLock.acquire();
+            }
+        } else {
+            if(wakeLock.isHeld()) {
+                wakeLock.release();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     private class MyWebChromeViewClient extends WebChromeClient {
