@@ -6,9 +6,7 @@ Descrição
 
 Essa biblioteca foi criada para facilitar a implementação do serviço Cloud Phone Leucotron em aplicações Android existentes.
 
-A minSdkVersion deve ser 21 para seu perfeito funcionamento.
-
-Não foram utilizadas as bibliotecas AndroidX para compatibilizar a biblioteca com aplicações em geral.
+A minSdkVersion deve ser 27 para seu perfeito funcionamento.
 
 **Como usar:**
 
@@ -26,7 +24,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.Leucotron:CloudPhoneLib-Android:0.1.2'
+	        implementation 'com.github.Leucotron:CloudPhoneLib-Android:0.1.3'
 	}
 ```
 3) Na ação onde irá abrir a comunicação com o Cloud Phone, adicionar a instrução abaixo:
