@@ -28,7 +28,7 @@ public class JCloudPhoneController {
 
     private boolean isValidUrl() {
         boolean returnValue = true;
-        if (!url.contains("bit.ly") && !url.contains("cloud-phone") && !url.contains("cloudphone")) {
+        if (!url.contains("bit.ly") && !url.contains("cloud-phone") && !url.contains("cloudphone") && !url.contains("clicktocall") && !url.contains(".leucotron.com.br")) {
             returnValue = false;
         }
         return returnValue;

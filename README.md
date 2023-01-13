@@ -24,7 +24,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.Leucotron:CloudPhoneLib-Android:0.1.3'
+	        implementation 'com.github.Leucotron:CloudPhoneLib-Android:0.1.5'
 	}
 ```
 3) Na ação onde irá abrir a comunicação com o Cloud Phone, adicionar a instrução abaixo:
@@ -57,3 +57,12 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
 2) Sensor de proximidade:
 A biblioteca trata o sensor de proximidade para que durante a chamada a tela não seja acionada indevidamente.
 
+3) Caso não tenha interesse em utilizar o jitpack e pretenda adicionar o Módulo diretamente ao seu projeto:
+
+Em primeiro lugar basta clonar este repositório e adicionar o módulo "cloudphonelib" ao seu projeto.
+
+Segundo passo é atualizar seu arquivo build.gradle com a seguinte dependência:
+
+```
+implementation project(path: ':cloudphonelib')
+```
